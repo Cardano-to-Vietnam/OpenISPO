@@ -29,11 +29,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'accounts.ProjectUser'
 
 # Application definition
 
 INSTALLED_APPS = [
-    'users',
+    'accounts',
+    'user',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
