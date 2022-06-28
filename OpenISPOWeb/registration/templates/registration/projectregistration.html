@@ -1,0 +1,45 @@
+{% extends "registration/header.html" %}
+
+{% block content %} 
+
+{% load crispy_forms_tags %}         
+<h1>Project Registration Form</h1>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group col-md-8 mb-0">
+        {{ projectregis_form.token_name|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-4 mb-0">
+        {{ projectregis_form.token_num|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ projectregis_form.start_time|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ projectregis_form.end_time|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ projectregis_form.prefer_pool_num|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ projectregis_form.prefer_wallet_num|as_crispy_field }}
+      </div>
+    </div>
+    {{ projectregis_form.website|as_crispy_field }}
+    <div class="form-row">
+      <div class="form-group col-md-8 mb-0">
+        {{ projectregis_form.email|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-4 mb-0">
+        {{ projectregis_form.phone|as_crispy_field }}
+      </div>
+    </div>
+    {{ projectregis_form.disclaimer_agreement|as_crispy_field }}
+    <button type="submit" class="btn btn-primary">Resgister</button>
+  </form>
+{% endblock %}  

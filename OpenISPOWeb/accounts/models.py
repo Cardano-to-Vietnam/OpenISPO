@@ -2,7 +2,6 @@ from ctypes import addressof
 from pydoc import describe
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
-from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -30,7 +29,11 @@ class ProjectUserManager(BaseUserManager):
         """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
+
+        extra_fields.setdefault('name', 'administrator')
+        extra_fields.setdefault('phone', '0000-0000')
+        extra_fields.setdefault('address', 'VietNam')
+        extra_fields.setdefault('note', '')
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError(_('Superuser must have is_staff=True.'))
@@ -60,7 +63,7 @@ class ProjectUser(AbstractBaseUser, PermissionsMixin):
 
     user_type = models.CharField(max_length=20,choices=user_type_choices,default='deligated_users')
 
-    note = models.CharField(max_length=200)
+    note = models.CharField(max_length=200, default=None, blank=True, null=True)
 
     is_staff = models.BooleanField(default=False)
 
@@ -73,12 +76,8 @@ class ProjectUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class PoolRegis(models.Model):
-    name = name = models.CharField(max_length=100)
-    pool_addr = models.CharField(max_length=200)
-    user_owner = models.OneToOneField(ProjectUser, on_delete=models.CASCADE)
-    disclaimer = models.OneToOneField(Disclaimer, on_delete=models.SET_NULL)
-
-    def __str__(self):
-        return self.name
-
+# class MatchingProjectPool(models.Model):
+#     project = models.ForeignKey(ProjectRegis, on_delete=models.CASCADE)
+#     pool = models.ForeignKey(PoolRegis, on_delete=models.CASCADE)
+#     start_time = models.DateTimeField(default=datetime.now(), blank=False)
+#     end_time = models.DateTimeField(default = datetime.now() + relativedelta(month=6), blank=False)
