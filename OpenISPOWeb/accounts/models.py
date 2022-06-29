@@ -3,7 +3,7 @@ from pydoc import describe
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db.models.signals import post_save
-from django.dispatch import receiver
+from registration.models import ProjectRegistration
 
 
 class ProjectUserManager(BaseUserManager):
@@ -20,6 +20,10 @@ class ProjectUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
+
+        user.is_staff = True if user.user_type == 'admin' else False
+        user.is_superuser = True if user.user_type == 'admin' else False
+        print("DEBUG!!!! is_staff", user.is_staff)
         user.save()
         return user
 
@@ -27,18 +31,16 @@ class ProjectUserManager(BaseUserManager):
         """
         Create and save a SuperUser with the given email and password.
         """
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+        # extra_fields.setdefault('is_superuser', True)
 
         extra_fields.setdefault('name', 'administrator')
         extra_fields.setdefault('phone', '0000-0000')
         extra_fields.setdefault('address', 'VietNam')
+        extra_fields.setdefault('user_type','admin')
         extra_fields.setdefault('note', '')
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Superuser must have is_staff=True.'))
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError(_('Superuser must have is_superuser=True.'))
+        # if extra_fields.get('is_superuser') is not True:
+        #     raise ValueError(_('Superuser must have is_superuser=True.'))
         return self.create_user(email, password, **extra_fields)
 
 
@@ -59,13 +61,13 @@ class ProjectUser(AbstractBaseUser, PermissionsMixin):
         ('token_distributor','token_distributor'),
         ('pools_owner','pools_owner'),
         ('deligated_users','deligated_users'),
+        ('admin','admin'),
     ]
 
     user_type = models.CharField(max_length=20,choices=user_type_choices,default='deligated_users')
+    project = models.ForeignKey(ProjectRegistration, on_delete=models.CASCADE, blank=True, null=True)
 
     note = models.CharField(max_length=200, default=None, blank=True, null=True)
-
-    is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -75,6 +77,11 @@ class ProjectUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+    # @property
+    def is_staff(self):
+        if self.user_type == 'admin':
+            return True
+        return False
 
 # class MatchingProjectPool(models.Model):
 #     project = models.ForeignKey(ProjectRegis, on_delete=models.CASCADE)

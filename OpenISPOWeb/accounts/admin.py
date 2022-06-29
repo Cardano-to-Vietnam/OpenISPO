@@ -8,11 +8,11 @@ from .models import ProjectUser
 class ProjectUserAdmin(UserAdmin):
     add_form = ProjectUserCreationForm
     model = ProjectUser
-    list_display = ('email', 'is_staff',)
-    list_filter = ('email', 'is_staff',)
+    list_display = ('email','phone',)
+    list_filter = ('email',)
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
-        ('Permissions', {'fields': ('is_staff',)}),
+        ('Permissions', {'fields': ()}),
     )
     add_fieldsets = (
         (None, {
@@ -24,7 +24,7 @@ class ProjectUserAdmin(UserAdmin):
     ordering = ('email',)
 
 
-# admin.site.register(ProjectUser, ProjectUserAdmin)
+admin.site.register(ProjectUser, ProjectUserAdmin)
 # admin.site.register(Disclaimer)
 # admin.site.register(PoolRegis)
 # admin.site.register(ProjectRegis)

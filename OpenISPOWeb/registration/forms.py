@@ -16,7 +16,7 @@ class PoolRegistrationForm(forms.ModelForm):
 
     class Meta:
         model=PoolRegistration
-        fields=('pool_name', 'pool_id', 'prefered_tokens', 'website', 'email', 'phone')
+        fields=('pool_name', 'pool_id', 'prefered_tokens', 'website')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

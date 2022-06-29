@@ -5,17 +5,16 @@ from django import forms
 
 class ProjectUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    name = forms.CharField(required=True)
     phone = forms.CharField(required=True)
-    address = forms.CharField(required=True)
 
     class Meta:
         model = ProjectUser
-        fields = ("email", "name", "phone", "address", "password1", "password2")
+        fields = ("email", "phone")
 
     def save(self, commit=True):
         user = super(ProjectUserCreationForm, self).save(commit=False)
-        user.email = self.cleaned_data['email']
+        raw_password = ProjectUser.objects.make_random_password()
+        user.set_password(raw_password)
         if commit:
             user.save()
         return user

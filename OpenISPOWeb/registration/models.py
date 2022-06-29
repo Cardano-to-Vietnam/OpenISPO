@@ -17,8 +17,6 @@ class PoolRegistration(models.Model):
     prefer_token = models.CharField(max_length=100)
 
     website = models.URLField(max_length=200)
-    email = models.EmailField()
-    phone = models.CharField(max_length=15)
     disclaimer = models.OneToOneField(Disclaimer, null=True, on_delete=models.SET_NULL)
 
     status_choices = [
@@ -43,7 +41,6 @@ class ProjectRegistration(models.Model):
     website = models.URLField(max_length=200)
 
     disclaimer = models.OneToOneField(Disclaimer, null=True, on_delete=models.SET_NULL)
-
     status_choices = [
         ('registered','registered'),
         ('finalized','finalized'),
