@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'captcha',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -152,3 +153,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # URL
 LOGIN_URL='/login/'
+
+# RECHAPTCHA
+RECAPTCHA_PUBLIC_KEY = '6LcYD7ogAAAAAMqzvuJ-ovVcu-NKxXXEWy6VvIgM'
+RECAPTCHA_PRIVATE_KEY = '6LcYD7ogAAAAAJ77NxPE4BQ1Ioggl5qUxQ_7EaE9'

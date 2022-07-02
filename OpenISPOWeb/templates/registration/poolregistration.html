@@ -1,4 +1,4 @@
-{% extends "registration/header.html" %}
+{% extends "base/header.html" %}
 
 {% block content %} 
 
@@ -25,7 +25,6 @@
       </div>
     </div>
     {{ poolregis_form.disclaimer_agreement|as_crispy_field }}
-    {{ poolregis_form.captcha|as_crispy_field }}
     <button type="submit" class="btn btn-primary">Resgister</button>
   </form>
 {% endblock %}  

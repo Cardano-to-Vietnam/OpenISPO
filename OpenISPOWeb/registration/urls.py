@@ -8,3 +8,9 @@ urlpatterns = [
     path('projectregister/', views.project_register_request_view, name='projectregister'),
     path('regisdone/', views.register_done_view, name='regis_done'),
 ]
+
+htmx_urlpatterns = [
+    path('validate-pool-<subject>', views.validate_pool_subject, name='validate-subject'),
+]
+
+urlpatterns += htmx_urlpatterns

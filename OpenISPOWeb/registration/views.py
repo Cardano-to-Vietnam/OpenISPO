@@ -3,6 +3,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 
+
+from crispy_forms.templatetags.crispy_forms_filters import as_crispy_field
+
+
 from .forms import PoolRegistrationForm, ProjectRegistrationForm
 from accounts.models import ProjectUser
 
@@ -20,6 +24,10 @@ def pool_register_request_view(request):
             messages.error(request, "Unsuccessful registration. Invalid information.")
     form = PoolRegistrationForm()
     return render (request=request, template_name="registration/poolregistration.html", context={"poolregis_form":form})
+
+def validate_pool_subject(request, subject):
+    form = PoolRegistrationForm(request.GET)
+    return HttpResponse(as_crispy_field(form[subject]))
 
 def project_register_request_view(request):
     if request.method == "POST":
