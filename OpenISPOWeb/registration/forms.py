@@ -1,3 +1,4 @@
+from cProfile import label
 from django import forms
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
@@ -14,7 +15,8 @@ class PoolRegistrationForm(forms.ModelForm):
     pool_name = forms.CharField(
         error_messages={'required': ("Pool name field is required")},
         widget=forms.TextInput(attrs={
-                'hx-get': reverse_lazy('registration:validate-subject', kwargs={'subject': 'pool_name'},),
+                'class': 'form-control is-valid',
+                'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'pool_name'},),
                 'hx-trigger': 'keyup changed',
                 'hx-target': '#div_id_pool_name',
                 }))
@@ -22,7 +24,7 @@ class PoolRegistrationForm(forms.ModelForm):
     pool_id = forms.CharField(
         error_messages={'required': ("Pool ID field is required")},
         widget=forms.TextInput(attrs={
-                'hx-get': reverse_lazy('registration:validate-subject', kwargs={'subject': 'pool_id'},),
+                'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'pool_id'},),
                 'hx-trigger': 'keyup',
                 'hx-target': '#div_id_pool_id',
                 }))
@@ -34,12 +36,12 @@ class PoolRegistrationForm(forms.ModelForm):
     email = forms.EmailField(
         error_messages={'required': ("Cần phải nhập email"), 'invalid': ("Sai format email rồi!!")}, 
         widget=forms.EmailInput(attrs={
-                'hx-get': reverse_lazy('registration:validate-subject', kwargs={'subject': 'email'},),
+                'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'email'},),
                 'hx-target': '#div_id_email',
                 }))
 
     phone = forms.CharField(widget=forms.TextInput(attrs={
-                'hx-get': reverse_lazy('registration:validate-subject', kwargs={'subject': 'email'},),
+                'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'email'},),
                 'hx-target': '#div_id_email',
                 }))
 
@@ -83,10 +85,38 @@ class PoolRegistrationForm(forms.ModelForm):
         
 
 class ProjectRegistrationForm(forms.ModelForm):
-    token_name = forms.CharField(label="Token")
-    token_num = forms.CharField(label="Number of token")
+    token_name = forms.CharField(
+        label="Token",
+        error_messages={'required': ("Token field is required")},
+        widget=forms.TextInput(attrs={
+                'class': 'form-control is-valid',
+                'placeholder': 'Token name',
+                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'token_name'},),
+                'hx-trigger': 'keyup changed',
+                'hx-target': '#div_id_token_name',
+                }))
+    token_num = forms.CharField(
+        label="Number of token",
+        error_messages={'required': ("Number of token is required"), 'invalid': ("Sai định dạng rồi!!")},
+        widget=forms.TextInput(attrs={
+                'class': 'form-control is-valid',
+                'placeholder': 'Number of token',
+                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'start_time'},),
+                'hx-trigger': 'keyup changed',
+                'hx-target': '#div_id_start_time',
+                }))
     
-    start_time = forms.DateTimeField(label="From")
+    start_time = forms.DateTimeField(
+        label="From",
+        error_messages={'required': ("Start date is required"), 'invalid': ("Sai định dạng rồi!!")},
+        widget=forms.TextInput(attrs={
+                'class': 'form-control is-valid',
+                'placeholder': 'MM/DD/YYYY',
+                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'start_time'},),
+                'hx-trigger': 'keyup changed',
+                'hx-target': '#div_id_start_time',
+                }))
+
     end_time = forms.DateTimeField(label="To")
 
     prefer_pool_num = forms.CharField(label="Number of refered pools")
@@ -94,8 +124,17 @@ class ProjectRegistrationForm(forms.ModelForm):
 
     website = forms.URLField()
     email = forms.EmailField()
+    email2 = forms.EmailField(
+        label="Confirm Email"
+    )
     phone = forms.CharField()
-    disclaimer_agreement = forms.BooleanField(label="I have readd and agree with the disclaimer", required=True)
+    disclaimer_agreement = forms.BooleanField(
+        label="I have read and agree with the disclaimer", 
+        required=True)
+
+    captcha = ReCaptchaField(
+        label="",
+        widget=ReCaptchaV2Checkbox,)
 
     class Meta:
         model=ProjectRegistration
@@ -104,28 +143,17 @@ class ProjectRegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.layout = Layout(
-            Row(
-                Column('token_name', css_class='form-group col-md-8 mb-0'),
-                Column('token_num', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('start_time', css_class='form-group col-md-6 mb-0'),
-                Column('end_time', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('prefer_pool_num', css_class='form-group col-md-6 mb-0'),
-                Column('prefer_wallet_num', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            'website',
-            Row(
-                Column('email', css_class='form-group col-md-8 mb-0'),
-                Column('phone', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            'disclaimer_agreement',
-            Submit('submit', 'Register')
-        )
+
+    def clean_token_name(self):
+        token_name = self.cleaned_data['token_name']
+        if len(token_name) < 3:
+            raise forms.ValidationError("Tên Token quá ngắn!")
+        return token_name
+
+    def clean_token_num(self):
+        token_num = self.cleaned_data['token_num']
+        print(token_num.isnumeric())
+        if not token_num.isnumeric():
+            print("eTRUE")
+            raise forms.ValidationError("Vui lòng điền số vào ô này!")
+        return token_num

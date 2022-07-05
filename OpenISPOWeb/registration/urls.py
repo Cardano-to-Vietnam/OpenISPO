@@ -10,7 +10,8 @@ urlpatterns = [
 ]
 
 htmx_urlpatterns = [
-    path('validate-pool-<subject>', views.validate_pool_subject, name='validate-subject'),
+    path('validate-pool-<subject>', views.validate_pool_subject, name='validate-pool-subject'),
+    path('validate-proj-<subject>', views.validate_proj_subject, name='validate-proj-subject'),
 ]
 
 urlpatterns += htmx_urlpatterns

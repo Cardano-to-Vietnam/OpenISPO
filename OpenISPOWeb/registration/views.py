@@ -1,7 +1,7 @@
 from re import A
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 
 
 from crispy_forms.templatetags.crispy_forms_filters import as_crispy_field
@@ -44,6 +44,9 @@ def project_register_request_view(request):
     form = ProjectRegistrationForm()
     return render (request=request, template_name="registration/projectregistration.html", context={"projectregis_form":form})
 
+def validate_proj_subject(request, subject):
+    form = ProjectRegistrationForm(request.GET)
+    return HttpResponse(as_crispy_field(form[subject]))
 
 def register_done_view(request):
     return HttpResponse("Your resgister is in processing")
