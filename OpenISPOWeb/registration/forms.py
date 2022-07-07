@@ -94,6 +94,7 @@ class ProjectRegistrationForm(forms.ModelForm):
                 'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'token_name'},),
                 'hx-trigger': 'keyup changed',
                 'hx-target': '#div_id_token_name',
+                # 'required': '',
                 }))
     token_num = forms.CharField(
         label="Number of token",
@@ -101,17 +102,17 @@ class ProjectRegistrationForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
                 'class': 'form-control is-valid',
                 'placeholder': 'Number of token',
-                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'start_time'},),
+                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'token_num'},),
                 'hx-trigger': 'keyup changed',
-                'hx-target': '#div_id_start_time',
+                'hx-target': '#div_id_token_num',
                 }))
     
     start_time = forms.DateTimeField(
         label="From",
-        error_messages={'required': ("Start date is required"), 'invalid': ("Sai định dạng rồi!!")},
+        error_messages={'required': ("Start date is required"), 'invalid': ("Wrong date format. MM/DD/YY or MM/DD/YYYY")},
         widget=forms.TextInput(attrs={
                 'class': 'form-control is-valid',
-                'placeholder': 'MM/DD/YYYY',
+                'placeholder': 'MM/DD/YY or MM/DD/YYYY',
                 'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'start_time'},),
                 'hx-trigger': 'keyup changed',
                 'hx-target': '#div_id_start_time',
@@ -146,14 +147,13 @@ class ProjectRegistrationForm(forms.ModelForm):
 
     def clean_token_name(self):
         token_name = self.cleaned_data['token_name']
-        if len(token_name) < 3:
-            raise forms.ValidationError("Tên Token quá ngắn!")
+        if len(token_name) >= 10:
+            raise forms.ValidationError("Token name needs to be less than 10 characters")
         return token_name
 
     def clean_token_num(self):
         token_num = self.cleaned_data['token_num']
         print(token_num.isnumeric())
         if not token_num.isnumeric():
-            print("eTRUE")
-            raise forms.ValidationError("Vui lòng điền số vào ô này!")
+            raise forms.ValidationError("Please enter a number in this field")
         return token_num
