@@ -32,8 +32,8 @@ class ProjectRegistration(models.Model):
     token_name = models.CharField(max_length=100)
     token_num = models.IntegerField()
 
-    start_time = models.DateTimeField(default=datetime.now(), blank=False)
-    end_time = models.DateTimeField(default = datetime.now() + relativedelta(month=6), blank=False)
+    start_time = models.DateField(default=datetime.now(), blank=False)
+    end_time = models.DateField(default = datetime.now() + relativedelta(month=6), blank=False)
 
     prefer_pool_num = models.IntegerField()
     prefer_wallet_num = models.IntegerField()

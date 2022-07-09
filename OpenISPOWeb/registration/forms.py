@@ -107,7 +107,7 @@ class ProjectRegistrationForm(forms.ModelForm):
                 'hx-target': '#div_id_token_num',
                 }))
     
-    start_time = forms.DateTimeField(
+    start_time = forms.DateField(
         label="From",
         error_messages={'required': ("Start date is required"), 'invalid': ("Wrong date format. MM/DD/YY or MM/DD/YYYY")},
         widget=forms.TextInput(attrs={
@@ -118,17 +118,74 @@ class ProjectRegistrationForm(forms.ModelForm):
                 'hx-target': '#div_id_start_time',
                 }))
 
-    end_time = forms.DateTimeField(label="To")
+    end_time = forms.DateField(
+        label="To",
+        error_messages={'required': ("End date is required"), 'invalid': ("Wrong date format. MM/DD/YY or MM/DD/YYYY")},
+        widget=forms.TextInput(attrs={
+                'class': 'form-control is-valid',
+                'placeholder': 'MM/DD/YY or MM/DD/YYYY',
+                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'end_time'},),
+                'hx-trigger': 'keyup changed',
+                'hx-target': '#div_id_end_time',
+                }))
 
-    prefer_pool_num = forms.CharField(label="Number of refered pools")
-    prefer_wallet_num = forms.CharField(label="Number of prefered wallets")
+    prefer_pool_num = forms.CharField(
+        label="Number of refered pools",
+        widget=forms.TextInput(attrs={
+                'class': 'form-control is-valid',
+                'placeholder': '',
+                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'prefer_pool_num'},),
+                'hx-trigger': 'keyup changed',
+                'hx-target': '#div_id_prefer_pool_num',
+                }))
+    prefer_wallet_num = forms.CharField(
+        label="Number of prefered wallets",
+        widget=forms.TextInput(attrs={
+                'class': 'form-control is-valid',
+                'placeholder': '',
+                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'prefer_wallet_num'},),
+                'hx-trigger': 'keyup changed',
+                'hx-target': '#div_id_prefer_wallet_num',
+                }))
 
-    website = forms.URLField()
-    email = forms.EmailField()
+    website = forms.URLField(
+        error_messages={'required': ("Website is required"), 'invalid': ("Please fill URL format in this field")},
+        widget=forms.TextInput(attrs={
+                'class': 'form-control is-valid',
+                'placeholder': 'www.example.com or http(s)://example.com',
+                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'website'},),
+                'hx-trigger': 'keyup changed',
+                'hx-target': '#div_id_website',
+                }))
+
+    email = forms.EmailField(
+        error_messages={'required': ("Email is required"), 'invalid': ("Please fill Email format in this field")},
+        widget=forms.TextInput(attrs={
+                'class': 'form-control is-valid',
+                'placeholder': 'abc@example.com',
+                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'email'},),
+                'hx-trigger': 'keyup changed',
+                'hx-target': '#div_id_email',
+                }))
+
     email2 = forms.EmailField(
-        label="Confirm Email"
+        label="Confirm Email",
+        error_messages={'required': ("Email is required"), 'invalid': ("Please fill Email format in this field")},
+        widget=forms.TextInput(attrs={
+                'class': 'form-control is-valid',
+                'placeholder': 'Enter the email again',
+                'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'email2'},),
+                'hx-trigger': 'keyup changed',
+                'hx-target': '#div_id_email2',
+                }))
+
+    phone = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+                'class': 'form-control is-valid',
+                'placeholder': '',
+                })
     )
-    phone = forms.CharField()
     disclaimer_agreement = forms.BooleanField(
         label="I have read and agree with the disclaimer", 
         required=True)
@@ -157,3 +214,23 @@ class ProjectRegistrationForm(forms.ModelForm):
         if not token_num.isnumeric():
             raise forms.ValidationError("Please enter a number in this field")
         return token_num
+    
+    def clean_prefer_pool_num(self):
+        prefer_pool_num = self.cleaned_data['prefer_pool_num']
+        print(prefer_pool_num.isnumeric())
+        if not prefer_pool_num.isnumeric():
+            raise forms.ValidationError("Please enter a number in this field")
+        return prefer_pool_num
+
+    def clean_prefer_wallet_num(self):
+        prefer_wallet_num = self.cleaned_data['prefer_wallet_num']
+        print(prefer_wallet_num.isnumeric())
+        if not prefer_wallet_num.isnumeric():
+            raise forms.ValidationError("Please enter a number in this field")
+        return prefer_wallet_num
+
+    def clean(self):
+        if 'start_time' in self.cleaned_data and 'end_time' in self.cleaned_data:
+            if self.cleaned_data['start_time'] > self.cleaned_data['end_time']:
+                raise forms.ValidationError("The end time must be after the start time")
+        return self.cleaned_data
