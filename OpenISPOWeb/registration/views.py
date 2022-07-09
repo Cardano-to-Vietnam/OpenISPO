@@ -1,11 +1,10 @@
 from re import A
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.http import HttpResponse, FileResponse
-
+from django.http import HttpResponse
+from django.contrib.auth import get_user_model
 
 from crispy_forms.templatetags.crispy_forms_filters import as_crispy_field
-
 
 from .forms import PoolRegistrationForm, ProjectRegistrationForm
 from accounts.models import ProjectUser
@@ -33,8 +32,11 @@ def project_register_request_view(request):
     if request.method == "POST":
         form = ProjectRegistrationForm(request.POST)
         if form.is_valid():
-            user = ProjectUser(email=form.cleaned_data['email'],phone=form.cleaned_data['phone'])
-            user.save()
+            email=form.cleaned_data['email']
+            phone=form.cleaned_data['phone']
+            if not get_user_model().objects.filter(email=email).exists():
+                user = ProjectUser(email=email,phone=phone)
+                user.save()
             form.save()
             messages.success(request, "Registration successful." )
             return redirect("registration:regis_done")

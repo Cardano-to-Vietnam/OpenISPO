@@ -210,21 +210,18 @@ class ProjectRegistrationForm(forms.ModelForm):
 
     def clean_token_num(self):
         token_num = self.cleaned_data['token_num']
-        print(token_num.isnumeric())
         if not token_num.isnumeric():
             raise forms.ValidationError("Please enter a number in this field")
         return token_num
     
     def clean_prefer_pool_num(self):
         prefer_pool_num = self.cleaned_data['prefer_pool_num']
-        print(prefer_pool_num.isnumeric())
         if not prefer_pool_num.isnumeric():
             raise forms.ValidationError("Please enter a number in this field")
         return prefer_pool_num
 
     def clean_prefer_wallet_num(self):
         prefer_wallet_num = self.cleaned_data['prefer_wallet_num']
-        print(prefer_wallet_num.isnumeric())
         if not prefer_wallet_num.isnumeric():
             raise forms.ValidationError("Please enter a number in this field")
         return prefer_wallet_num
@@ -232,5 +229,12 @@ class ProjectRegistrationForm(forms.ModelForm):
     def clean(self):
         if 'start_time' in self.cleaned_data and 'end_time' in self.cleaned_data:
             if self.cleaned_data['start_time'] > self.cleaned_data['end_time']:
+                self.add_error("end_time", "The end time must be after the start time")
                 raise forms.ValidationError("The end time must be after the start time")
+
+        if 'email' in self.cleaned_data and 'email2' in self.cleaned_data:
+            if self.cleaned_data['email'] != self.cleaned_data['email2']:
+                self.add_error("email2", "Confirmation email is not the same")
+                raise forms.ValidationError("Confirmation email is not the same")
+
         return self.cleaned_data
