@@ -1,4 +1,3 @@
-from cProfile import label
 from django import forms
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
@@ -94,7 +93,6 @@ class ProjectRegistrationForm(forms.ModelForm):
                 'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'token_name'},),
                 'hx-trigger': 'keyup changed',
                 'hx-target': '#div_id_token_name',
-                # 'required': '',
                 }))
     token_num = forms.CharField(
         label="Number of token",

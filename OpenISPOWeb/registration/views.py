@@ -32,11 +32,6 @@ def project_register_request_view(request):
     if request.method == "POST":
         form = ProjectRegistrationForm(request.POST)
         if form.is_valid():
-            email=form.cleaned_data['email']
-            phone=form.cleaned_data['phone']
-            if not get_user_model().objects.filter(email=email).exists():
-                user = ProjectUser(email=email,phone=phone)
-                user.save()
             form.save()
             messages.success(request, "Registration successful." )
             return redirect("registration:regis_done")
