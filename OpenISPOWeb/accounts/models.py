@@ -23,7 +23,6 @@ class ProjectUserManager(BaseUserManager):
 
         user.is_staff = True if user.user_type == 'admin' else False
         user.is_superuser = True if user.user_type == 'admin' else False
-        print("DEBUG!!!! is_staff", user.is_staff)
         user.save()
         return user
 
@@ -51,20 +50,18 @@ class ProjectUser(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=500)
 
     status_choices = [
-        ('registered','registered'),
-        ('activate','activate'),
-        ('lock','lock'),
+        ('activate','Activate'),
+        ('lock','Lock'),
     ]
-    status = models.CharField(max_length=15,choices=status_choices,default='registered')
+    status = models.CharField(max_length=15,choices=status_choices,default='Activate')
 
     user_type_choices = [
-        ('token_distributor','token_distributor'),
-        ('pools_owner','pools_owner'),
-        ('deligated_users','deligated_users'),
-        ('admin','admin'),
+        ('token_distributor','Token distributor'),
+        ('pools_owner','Pools owner'),
+        ('admin','Admin'),
     ]
 
-    user_type = models.CharField(max_length=20,choices=user_type_choices,default='deligated_users')
+    user_type = models.CharField(max_length=20,choices=user_type_choices, default='Token distributor')
     project = models.ForeignKey(ProjectRegistration, on_delete=models.CASCADE, blank=True, null=True)
 
     note = models.CharField(max_length=200, default=None, blank=True, null=True)
@@ -73,6 +70,10 @@ class ProjectUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     objects = ProjectUserManager()
+
+    class Meta:
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
 
     def __str__(self):
         return self.email
