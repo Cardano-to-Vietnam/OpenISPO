@@ -14,6 +14,7 @@ def login_request(request):
     if request.user.is_authenticated:
         return render(request=request, template_name="accounts/logindone.html")
 
+    form = AuthenticationForm()
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -28,7 +29,6 @@ def login_request(request):
                 messages.error(request,"Invalid username or password.")
         else:
             messages.error(request,"Invalid username or password.")
-    form = AuthenticationForm()
     return render(request=request, template_name="accounts/login.html", context={"login_form":form})
 
 def register_request(request):
