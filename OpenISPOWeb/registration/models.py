@@ -41,7 +41,9 @@ class ProjectRegistration(models.Model):
     website = models.URLField(max_length=200)
 
     disclaimer = models.OneToOneField(Disclaimer, null=True, on_delete=models.SET_NULL)
+    email = models.EmailField(verbose_name='Email address', max_length=255)
     status_choices = [
+        ('registering','registering'),
         ('registered','registered'),
         ('finalized','finalized'),
         ('done','done'),

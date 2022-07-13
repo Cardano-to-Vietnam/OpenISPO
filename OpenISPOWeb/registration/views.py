@@ -33,7 +33,7 @@ def project_register_request_view(request):
         form = ProjectRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Registration successful." )
+            messages.success(request, "Registration successful.")
             return redirect("registration:regis_done")
         else:
             messages.error(request, "Unsuccessful registration. Invalid information.")
@@ -48,4 +48,4 @@ def validate_proj_subject(request, subject):
     return HttpResponse(as_crispy_field(form[subject]))
 
 def register_done_view(request):
-    return HttpResponse("Your resgister is in processing")
+    return HttpResponse("Please confirm your email address to complete the registration")

@@ -44,7 +44,7 @@ class ProjectUserManager(BaseUserManager):
 
 
 class ProjectUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
+    email = models.EmailField(verbose_name='Email address', max_length=255, unique=True)
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)
     address = models.CharField(max_length=500)
