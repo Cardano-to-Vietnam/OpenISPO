@@ -32,16 +32,15 @@ def login_request(request):
     return render(request=request, template_name="accounts/login.html", context={"login_form":form})
 
 def register_request(request):
-	if request.method == "POST":
-		form = ProjectUserCreationForm(request.POST)
-		if form.is_valid():
-			user = form.save()
-			login(request, user)
-			messages.success(request, "Registration successful." )
-			return redirect("accounts:logindone")
-		messages.error(request, "Unsuccessful registration. Invalid information.")
-	form = ProjectUserCreationForm()
-	return render (request=request, template_name="accounts/register.html", context={"register_form":form})
+    if request.method == "POST":
+        form = ProjectUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful." )
+            return redirect("accounts:logindone")
+        messages.error(request, "Unsuccessful registration. Invalid information.")
+    return render (request=request, template_name="accounts/register.html", context={"register_form":form})
 
 def logout_request(request):
 	logout(request)
