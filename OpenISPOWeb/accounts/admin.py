@@ -8,6 +8,7 @@ from .models import ProjectUser
 
 class ProjectUserAdmin(UserAdmin):
     form = ProjectUserChangeForm
+    actions = None
     add_form = ProjectUserCreationForm
     model = ProjectUser
     list_display = ('email','name','status','user_type')
