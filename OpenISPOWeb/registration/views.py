@@ -37,7 +37,6 @@ def project_register_request_view(request):
             return redirect("registration:regis_done")
         else:
             messages.error(request, "Unsuccessful registration. Invalid information.")
-            print(form.errors.as_data())
             return render (request=request, template_name="registration/projectregistration.html", context={"projectregis_form":form})
 
     form = ProjectRegistrationForm()

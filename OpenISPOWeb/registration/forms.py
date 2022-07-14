@@ -278,19 +278,13 @@ class ProjectRegistrationForm(forms.ModelForm):
         return email2
 
     def clean(self):
-        cleaned_data = super(ProjectRegistrationForm, self).clean()
+        if 'start_time' in self.cleaned_data and 'end_time' in self.cleaned_data:
+            if self.cleaned_data['start_time'] > self.cleaned_data['end_time']:
+                self.add_error("end_time", "The end time must be after the start time")
+                raise forms.ValidationError("The end time must be after the start time")
 
-        # start_time = cleaned_data.get("start_time")
-        # end_time = cleaned_data.get("end_time")
-        # if end_time < start_time:
-        #     raise forms.ValidationError("The end time must be after the start time")
-
-        email = cleaned_data.get("email")
-        print(email)
-        email2 = cleaned_data.get("email2")
-        print(email2)
-        print(email != email2)
-        if email != email2:
-            raise forms.ValidationError("Confirmation email is not the same")
-
+        if 'email' in self.cleaned_data and 'email2' in self.cleaned_data:
+            if self.cleaned_data['email'] != self.cleaned_data['email2']:
+                self.add_error("email2", "Confirmation email is not the same")
+                raise forms.ValidationError("Confirmation email is not the same")
         return self.cleaned_data
