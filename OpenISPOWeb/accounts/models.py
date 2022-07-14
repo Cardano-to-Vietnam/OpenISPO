@@ -53,7 +53,7 @@ class ProjectUser(AbstractBaseUser, PermissionsMixin):
         ('activate','Activate'),
         ('lock','Lock'),
     ]
-    status = models.CharField(max_length=15,choices=status_choices,default='Activate')
+    status = models.CharField(max_length=15,choices=status_choices,default='activate')
 
     user_type_choices = [
         ('token_distributor','Token distributor'),
@@ -81,6 +81,11 @@ class ProjectUser(AbstractBaseUser, PermissionsMixin):
     # @property
     def is_staff(self):
         if self.user_type == 'admin':
+            return True
+        return False
+    
+    def is_active(self):
+        if self.status == 'activate':
             return True
         return False
 
