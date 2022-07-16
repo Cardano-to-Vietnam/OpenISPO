@@ -4,3 +4,4 @@ django-recaptcha==3.0.0
 django-crispy-forms
 crispy_bootstrap5
 django-debug-toolbar
+psycopg2
