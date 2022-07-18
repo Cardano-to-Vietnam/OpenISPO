@@ -1,0 +1,5 @@
+{% autoescape off %}  
+Hi {{ project.email }},  
+Please click on the link to confirm your registration,  
+http://{{ domain }}{% url 'registration:projectemailverify' prjidb64=prjid token=token %}  
+{% endautoescape %}

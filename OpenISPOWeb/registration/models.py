@@ -48,5 +48,5 @@ class ProjectRegistration(models.Model):
         ('finalized','finalized'),
         ('done','done'),
     ]
-    status = models.CharField(max_length=15,choices=status_choices,default='registered')
+    status = models.CharField(max_length=15,choices=status_choices,default='registering')
     note = models.CharField(max_length=200)
