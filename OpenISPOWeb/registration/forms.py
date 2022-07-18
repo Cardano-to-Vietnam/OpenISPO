@@ -41,12 +41,12 @@ class PoolRegistrationForm(forms.ModelForm):
         }))
 
     phone = forms.CharField(widget=forms.TextInput(attrs={
-        'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'email'},),
-        'hx-target': '#div_id_email',
+        'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'phone'},),
+        'hx-target': '#div_id_phone',
     }))
 
     disclaimer_agreement = forms.BooleanField(
-        label="I have readd and agree with the disclaimer",
+        label="I have read and agree with the disclaimer",
         required=True
     )
 
@@ -186,6 +186,9 @@ class ProjectRegistrationForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': '',
+            'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'phone'},),
+            'hx-trigger': 'keyup changed',
+            'hx-target': '#div_id_phone',
         })
     )
     disclaimer_agreement = forms.BooleanField(
@@ -274,8 +277,13 @@ class ProjectRegistrationForm(forms.ModelForm):
         email2 = cleaned_data.get('email2')
         if (email2):
             self.fields['email2'].widget.attrs.update({'class': 'form-control is-valid'})
-
         return email2
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if (phone):
+            self.fields['phone'].widget.attrs.update({'class': 'form-control is-valid'})
+        return phone
 
     def clean(self):
         if 'start_time' in self.cleaned_data and 'end_time' in self.cleaned_data:

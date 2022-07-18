@@ -42,6 +42,8 @@ class ProjectRegistration(models.Model):
 
     disclaimer = models.OneToOneField(Disclaimer, null=True, on_delete=models.SET_NULL)
     email = models.EmailField(verbose_name='Email address', max_length=255)
+    phone = models.CharField(max_length=20, null=True)
+    create_time = models.DateField(default=timezone.now, blank=False)
     status_choices = [
         ('registering','registering'),
         ('registered','registered'),

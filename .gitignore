@@ -3,7 +3,4 @@
 /OpenISPOWeb/OpenISPOWeb/__pycache__
 /OpenISPOWeb/users/__pycache__
 __pycache__/
-/OpenISPOWeb/accounts/migrations/
-/OpenISPOWeb/registration/migrations/
-/OpenISPOWeb/cardano/migrations/
 /OpenISPOWeb/db.sqlite3

@@ -8,7 +8,7 @@ class ProjectRegistrationAdmin(admin.ModelAdmin):
     model = ProjectRegistration
     actions = None
     add_form = ProjectRegistrationForm
-    list_display = ('token_name','token_num','email','start_time','end_time', 'status')
+    list_display = ('token_name','token_num','email','phone','start_time','end_time','create_time','status')
     list_filter = ('status',)
     search_fields = ('token_name',)
     ordering = ('token_name',)

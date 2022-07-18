@@ -89,18 +89,18 @@ WSGI_APPLICATION = 'OpenISPOWeb.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
     # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'openispo',
-    #     'USER': 'phuonglc',
-    #     'PASSWORD': '1234',
-    #     'HOST': '194.233.73.17',
-    #     'PORT': '5432'
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
     # },
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'openispo',
+        'USER': 'phuonglc',
+        'PASSWORD': '1234',
+        'HOST': '194.233.73.17',
+        'PORT': '5432'
+    },
     # 'cardano': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
     #     'NAME': 'cexplorer',
@@ -173,3 +173,6 @@ EMAIL_HOST_USER = 'samplehost3004@gmail.com'
 EMAIL_HOST_PASSWORD = 'esquqycoczrrntcu'
 EMAIL_PORT = 587  
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# TOKEN GENERATE TIMEOUT
+PASSWORD_RESET_TIMEOUT = 43200

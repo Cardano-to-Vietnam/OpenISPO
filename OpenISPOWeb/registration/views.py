@@ -45,7 +45,7 @@ def project_register_request_view(request):
 
             # to get the domain of the current site  
             current_site = get_current_site(request)  
-            mail_subject = 'Activation link has been sent to your email'  
+            mail_subject = 'OPENISPO Verify registration email'  
             message = render_to_string('registration/emailverify.html', {  
                 'project': project,  
                 'domain': current_site.domain,  
@@ -70,7 +70,7 @@ def validate_proj_subject(request, subject):
     return HttpResponse(as_crispy_field(form[subject]))
 
 def register_done_view(request):
-    return HttpResponse("Please confirm your email address to complete the registration")
+    return HttpResponse("Please confirm your email address to complete the registration in 12 hour!")
 
 def project_email_verify(request, prjidb64, token):  
     ProjectModel = ProjectRegistration  
