@@ -11,22 +11,6 @@ class Disclaimer(models.Model):
     version = models.FloatField()
     note = models.CharField(max_length=500)
 
-class PoolRegistration(models.Model):
-    pool_name = models.CharField(max_length=100)
-    pool_id = models.IntegerField()
-    prefer_token = models.CharField(max_length=100)
-
-    website = models.URLField(max_length=200)
-    disclaimer = models.OneToOneField(Disclaimer, null=True, on_delete=models.SET_NULL)
-
-    status_choices = [
-        ('registered','registered'),
-        ('finalized','finalized'),
-        ('done','done'),
-    ]
-    status = models.CharField(max_length=15,choices=status_choices,default='registered')
-    note = models.CharField(max_length=200)
-
 
 class ProjectRegistration(models.Model):
     token_name = models.CharField(max_length=100)
@@ -39,11 +23,34 @@ class ProjectRegistration(models.Model):
     prefer_wallet_num = models.IntegerField()
 
     website = models.URLField(max_length=200)
-
-    disclaimer = models.OneToOneField(Disclaimer, null=True, on_delete=models.SET_NULL)
     email = models.EmailField(verbose_name='Email address', max_length=255)
     phone = models.CharField(max_length=20, null=True)
+    
     create_time = models.DateField(default=timezone.now, blank=False)
+    disclaimer = models.OneToOneField(Disclaimer, null=True, on_delete=models.SET_NULL)
+    
+    status_choices = [
+        ('registering','registering'),
+        ('registered','registered'),
+        ('finalized','finalized'),
+        ('done','done'),
+    ]
+    status = models.CharField(max_length=15,choices=status_choices,default='registering')
+    note = models.CharField(max_length=200)
+
+
+class PoolRegistration(models.Model):
+    pool_name = models.CharField(max_length=100)
+    pool_id = models.CharField(max_length=100)
+    prefer_token = models.CharField(max_length=100)
+    
+    website = models.URLField(max_length=200)
+    email = models.EmailField(verbose_name='Email address', max_length=255)
+    phone = models.CharField(max_length=20, null=True)
+    
+    create_time = models.DateField(default=timezone.now, blank=False)
+    disclaimer = models.OneToOneField(Disclaimer, null=True, on_delete=models.SET_NULL)
+
     status_choices = [
         ('registering','registering'),
         ('registered','registered'),

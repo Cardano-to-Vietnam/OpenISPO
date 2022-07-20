@@ -10,77 +10,6 @@ from captcha.widgets import ReCaptchaV2Checkbox
 
 from .models import PoolRegistration, ProjectRegistration
 
-class PoolRegistrationForm(forms.ModelForm):
-    pool_name = forms.CharField(
-        error_messages={'required': ("Pool name field is required")},
-        widget=forms.TextInput(attrs={
-            'class': 'form-control ',
-            'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'pool_name'},),
-            'hx-trigger': 'keyup changed',
-            'hx-target': '#div_id_pool_name',
-        }))
-
-    pool_id = forms.CharField(
-        error_messages={'required': ("Pool ID field is required")},
-        widget=forms.TextInput(attrs={
-            'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'pool_id'},),
-            'hx-trigger': 'keyup',
-            'hx-target': '#div_id_pool_id',
-        }))
-
-    prefered_tokens = forms.CharField()
-
-    website = forms.URLField()
-
-    email = forms.EmailField(
-        error_messages={'required': ("Cần phải nhập email"), 'invalid': (
-            "Sai format email rồi!!")},
-        widget=forms.EmailInput(attrs={
-            'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'email'},),
-            'hx-target': '#div_id_email',
-        }))
-
-    phone = forms.CharField(widget=forms.TextInput(attrs={
-        'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'phone'},),
-        'hx-target': '#div_id_phone',
-    }))
-
-    disclaimer_agreement = forms.BooleanField(
-        label="I have read and agree with the disclaimer",
-        required=True
-    )
-
-    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
-
-
-    class Meta:
-        model = PoolRegistration
-        fields = ('pool_name', 'pool_id', 'prefered_tokens', 'website')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.attrs = {"novalidate": 'novalidate'}
-        self.fields['pool_name'].widget.attrs.update({'autofocus': True})
-
-    def clean_pool_name(self):
-        pool_name = self.cleaned_data['pool_name']
-        if len(pool_name) < 3:
-            raise forms.ValidationError("Too shorrt!!!!")
-        return pool_name
-
-    def clean_pool_id(self):
-        pool_id = self.cleaned_data['pool_id']
-        if len(str(pool_id)) < 3:
-            raise forms.ValidationError("pool id Too shorrt!!!!")
-        return pool_id
-
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if get_user_model().objects.filter(email=email).exists():
-            raise forms.ValidationError("This email already exists")
-        return email
-
 class ProjectRegistrationForm(forms.ModelForm):    
     token_name = forms.CharField(
         label="Token",
@@ -189,8 +118,8 @@ class ProjectRegistrationForm(forms.ModelForm):
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'phone'},),
             'hx-trigger': 'keyup changed',
             'hx-target': '#div_id_phone',
-        })
-    )
+        }))
+
     disclaimer_agreement = forms.BooleanField(
         label="I have read and agree with the disclaimer",
         required=True)
@@ -266,15 +195,13 @@ class ProjectRegistrationForm(forms.ModelForm):
         return website
 
     def clean_email(self):
-        cleaned_data = super(ProjectRegistrationForm, self).clean()
-        email = cleaned_data.get('email')
+        email = self.cleaned_data['email']
         if (email):
             self.fields['email'].widget.attrs.update({'class': 'form-control is-valid'})
         return email
 
     def clean_email2(self):
-        cleaned_data = super(ProjectRegistrationForm, self).clean()
-        email2 = cleaned_data.get('email2')
+        email2 = self.cleaned_data['email2']
         if (email2):
             self.fields['email2'].widget.attrs.update({'class': 'form-control is-valid'})
         return email2
@@ -291,6 +218,152 @@ class ProjectRegistrationForm(forms.ModelForm):
                 self.add_error("end_time", "The end time must be after the start time")
                 raise forms.ValidationError("The end time must be after the start time")
 
+        if 'email' in self.cleaned_data and 'email2' in self.cleaned_data:
+            if self.cleaned_data['email'] != self.cleaned_data['email2']:
+                self.add_error("email2", "Confirmation email is not the same")
+                raise forms.ValidationError("Confirmation email is not the same")
+        return self.cleaned_data
+
+
+class PoolRegistrationForm(forms.ModelForm):
+    pool_name = forms.CharField(
+        error_messages={'required': ("Pool name field is required")},
+        widget=forms.TextInput(attrs={
+            'class': 'form-control ',
+            'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'pool_name'},),
+            'hx-trigger': 'keyup changed',
+            'hx-target': '#div_id_pool_name',
+        }))
+
+    pool_id = forms.CharField(
+        label="Pool ID",
+        error_messages={'required': ("Pool ID field is required")},
+        widget=forms.TextInput(attrs={
+            'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'pool_id'},),
+            'hx-trigger': 'keyup',
+            'hx-target': '#div_id_pool_id',
+        }))
+
+    prefered_tokens = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'AZ, LUNA,...',
+            'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'prefered_tokens'},),
+            'hx-trigger': 'keyup changed',
+            'hx-target': '#div_id_prefered_tokens',
+        }))
+
+    website = forms.URLField(
+        error_messages={'required': ("Website is required"), 'invalid': (
+            "Please fill URL format in this field")},
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'www.example.com or http(s)://example.com',
+            'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'website'},),
+            'hx-trigger': 'keyup changed',
+            'hx-target': '#div_id_website',
+        }))
+
+    email = forms.EmailField(
+        error_messages={'required': ("Email is required"), 'invalid': (
+            "Please fill Email format in this field")},
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'abc@example.com',
+            'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'email'},),
+            'hx-trigger': 'keyup changed',
+            'hx-target': '#div_id_email',
+        }))
+
+    email2 = forms.EmailField(
+        label="Confirm Email",
+        error_messages={'required': ("Email is required"), 'invalid': (
+            "Please fill Email format in this field")},
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter the email again',
+            'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'email2'},),
+            'hx-trigger': 'keyup changed',
+            'hx-target': '#div_id_email2',
+        }))
+
+    phone = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': '',
+            'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'phone'},),
+            'hx-trigger': 'keyup changed',
+            'hx-target': '#div_id_phone',
+        }))
+
+    disclaimer_agreement = forms.BooleanField(
+        label="I have read and agree with the disclaimer",
+        required=True
+    )
+
+    captcha = ReCaptchaField(
+        label="",
+        widget=ReCaptchaV2Checkbox,)
+
+
+    class Meta:
+        model = PoolRegistration
+        fields = ('pool_name', 'pool_id', 'prefered_tokens', 'website', 'email', 'phone')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+
+    def clean_pool_name(self):
+        pool_name = self.cleaned_data['pool_name']
+        if len(pool_name) <= 0 or len(pool_name) >= 30:
+            raise forms.ValidationError(
+                "Pool name needs to be less than 30 characters")
+        else:
+            self.fields['pool_name'].widget.attrs.update(
+                {'class': 'form-control is-valid'})
+        return pool_name
+
+    def clean_pool_id(self):
+        pool_id = self.cleaned_data['pool_id']
+        if len(pool_id) > 0:
+            self.fields['pool_id'].widget.attrs.update(
+                {'class': 'form-control is-valid'})
+        return pool_id
+
+    def clean_prefered_tokens(self):
+        prefered_tokens = self.cleaned_data['prefered_tokens']
+        if (prefered_tokens):
+            self.fields['prefered_tokens'].widget.attrs.update({'class': 'form-control is-valid'})
+        return prefered_tokens
+
+    def clean_website(self):
+        website = self.cleaned_data['website']
+        if (website):
+            self.fields['website'].widget.attrs.update({'class': 'form-control is-valid'})
+        return website
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if (email):
+            self.fields['email'].widget.attrs.update({'class': 'form-control is-valid'})
+        return email
+
+    def clean_email2(self):
+        email2 = self.cleaned_data['email2']
+        if (email2):
+            self.fields['email2'].widget.attrs.update({'class': 'form-control is-valid'})
+        return email2
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if (phone):
+            self.fields['phone'].widget.attrs.update({'class': 'form-control is-valid'})
+        return phone
+
+    def clean(self):
         if 'email' in self.cleaned_data and 'email2' in self.cleaned_data:
             if self.cleaned_data['email'] != self.cleaned_data['email2']:
                 self.add_error("email2", "Confirmation email is not the same")

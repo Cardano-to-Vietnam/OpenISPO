@@ -17,24 +17,6 @@ from .models import ProjectRegistration
 from accounts.models import ProjectUser
 
 
-def pool_register_request_view(request):
-    if request.method == "POST":
-        form = PoolRegistrationForm(request.POST)
-        if form.is_valid():
-            user = ProjectUser(email=form.cleaned_data['email'],phone=form.cleaned_data['phone'])
-            user.save()
-            form.save()
-            messages.success(request, "Registration successful." )
-            return redirect("registration:regis_done")
-        else:
-            messages.error(request, "Unsuccessful registration. Invalid information.")
-    form = PoolRegistrationForm()
-    return render (request=request, template_name="registration/poolregistration.html", context={"poolregis_form":form})
-
-def validate_pool_subject(request, subject):
-    form = PoolRegistrationForm(request.GET)
-    return HttpResponse(as_crispy_field(form[subject]))
-
 def project_register_request_view(request):
     if request.method == "POST":
         form = ProjectRegistrationForm(request.POST)
@@ -69,8 +51,32 @@ def validate_proj_subject(request, subject):
     form = ProjectRegistrationForm(request.GET)
     return HttpResponse(as_crispy_field(form[subject]))
 
+
+def pool_register_request_view(request):
+    if request.method == "POST":
+        form = PoolRegistrationForm(request.POST)
+        if form.is_valid():
+            pool=form.save(commit=False)
+            pool.status = 'registering'
+            form.save()
+
+            messages.success(request, "Registration successful." )
+            return redirect("registration:regis_done")
+        else:
+            messages.error(request, "Unsuccessful registration. Invalid information.")
+            return render (request=request, template_name="registration/poolregistration.html", context={"poolregis_form":form})
+    
+    form = PoolRegistrationForm()
+    return render (request=request, template_name="registration/poolregistration.html", context={"poolregis_form":form})
+
+def validate_pool_subject(request, subject):
+    form = PoolRegistrationForm(request.GET)
+    return HttpResponse(as_crispy_field(form[subject]))
+
+
 def register_done_view(request):
     return HttpResponse("Please confirm your email address to complete the registration in 12 hour!")
+
 
 def project_email_verify(request, prjidb64, token):  
     ProjectModel = ProjectRegistration  
