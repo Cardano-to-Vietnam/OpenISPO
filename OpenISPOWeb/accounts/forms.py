@@ -30,10 +30,6 @@ class ProjectUserCreationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super(ProjectUserCreationForm, self).save(commit=False)
-        # raw_password = ProjectUser.objects.make_random_password()
-
-        # print("DEBUG",raw_password)
-        # user.set_password(raw_password)
         if commit:
             user.save()
         return user
