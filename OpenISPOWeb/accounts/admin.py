@@ -26,8 +26,7 @@ class ProjectUserAdmin(UserAdmin):
     ordering = ('email',)
 
     class Media:
-        js = ('accounts/js/random_password.js')
+        js = ("accounts/js/random_password.js", )
 
 admin.site.register(ProjectUser, ProjectUserAdmin)
 admin.site.unregister(Group)
-
