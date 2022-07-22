@@ -13,8 +13,7 @@ from crispy_forms.templatetags.crispy_forms_filters import as_crispy_field
 
 from .forms import PoolRegistrationForm, ProjectRegistrationForm
 from .tokens import email_verification_token  
-from .models import ProjectRegistration
-from accounts.models import ProjectUser
+from .models import PoolRegistration, ProjectRegistration
 
 
 def project_register_request_view(request):
@@ -25,10 +24,10 @@ def project_register_request_view(request):
             project.status = 'registering'
             form.save()
 
-            # to get the domain of the current site  
+            # Send verify-url to register email 
             current_site = get_current_site(request)  
             mail_subject = 'OPENISPO Verify registration email'  
-            message = render_to_string('registration/emailverify.html', {  
+            message = render_to_string('registration/projectemailverify.html', {  
                 'project': project,  
                 'domain': current_site.domain,  
                 'prjid':urlsafe_base64_encode(force_bytes(project.pk)),  
@@ -60,6 +59,19 @@ def pool_register_request_view(request):
             pool.status = 'registering'
             form.save()
 
+            # Send verify-url to register email 
+            current_site = get_current_site(request)  
+            mail_subject = 'OPENISPO Verify registration email'  
+            message = render_to_string('registration/poolemailverify.html', {  
+                'pool': pool,  
+                'domain': current_site.domain,  
+                'poolid':urlsafe_base64_encode(force_bytes(pool.pk)),  
+                'token':email_verification_token.make_token(pool),  
+            })  
+            to_email = form.cleaned_data.get('email')  
+            email = EmailMessage(mail_subject, message, to=[to_email])  
+            email.send() 
+
             messages.success(request, "Registration successful." )
             return redirect("registration:regis_done")
         else:
@@ -82,13 +94,26 @@ def project_email_verify(request, prjidb64, token):
     ProjectModel = ProjectRegistration  
     try:  
         prjid = force_str(urlsafe_base64_decode(prjidb64))
-        print("prjid",prjid)
         project = ProjectModel.objects.get(pk=prjid)  
     except(TypeError, ValueError, OverflowError, ProjectModel.DoesNotExist):  
         project = None  
     if project is not None and email_verification_token.check_token(project, token):  
         project.status = "registered"  
         project.save()  
+        return HttpResponse('Thank you for your email confirmation.')  
+    else:  
+        return HttpResponse('Activation link is invalid!')
+
+def pool_email_verify(request, poolidb64, token):  
+    PoolModel = PoolRegistration  
+    try:  
+        poolid = force_str(urlsafe_base64_decode(poolidb64))
+        pool = PoolModel.objects.get(pk=poolid)  
+    except(TypeError, ValueError, OverflowError, PoolModel.DoesNotExist):  
+        pool = None  
+    if pool is not None and email_verification_token.check_token(pool, token):  
+        pool.status = "registered"  
+        pool.save()  
         return HttpResponse('Thank you for your email confirmation.')  
     else:  
         return HttpResponse('Activation link is invalid!')

@@ -35,6 +35,7 @@ AUTH_USER_MODEL = 'accounts.ProjectUser'
 INSTALLED_APPS = [
     'accounts',
     'registration',
+    'cardano',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -101,14 +102,14 @@ DATABASES = {
         'HOST': '194.233.73.17',
         'PORT': '5432'
     },
-    # 'cardano': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'cexplorer',
-    #     'USER': 'phuonglc',
-    #     'PASSWORD': '1234',
-    #     'HOST': '194.233.73.17',
-    #     'PORT': '5432'
-    # }
+    'cardano': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'cexplorer',
+        'USER': 'phuonglc',
+        'PASSWORD': '1234',
+        'HOST': '194.233.73.17',
+        'PORT': '5432'
+    }
 }
 
 

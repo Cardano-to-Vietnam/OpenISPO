@@ -1,0 +1,5 @@
+{% autoescape off %}  
+Hi {{ pool.email }},  
+Please click on the link to confirm your registration,  
+http://{{ domain }}{% url 'registration:poolemailverify' poolidb64=poolid token=token %}  
+{% endautoescape %}

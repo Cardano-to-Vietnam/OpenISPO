@@ -10,6 +10,8 @@ from captcha.widgets import ReCaptchaV2Checkbox
 
 from .models import PoolRegistration, ProjectRegistration
 
+from cardano.models import PoolHash
+
 class ProjectRegistrationForm(forms.ModelForm):    
     token_name = forms.CharField(
         label="Token",
@@ -18,7 +20,7 @@ class ProjectRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'Token name',
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'token_name'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_token_name',
         }))
     token_num = forms.CharField(
@@ -29,7 +31,7 @@ class ProjectRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'Number of token',
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'token_num'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_token_num',
         }))
 
@@ -41,7 +43,7 @@ class ProjectRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'MM/DD/YY or MM/DD/YYYY',
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'start_time'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_start_time',
         }))
 
@@ -53,7 +55,7 @@ class ProjectRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'MM/DD/YY or MM/DD/YYYY',
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'end_time'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_end_time',
         }))
 
@@ -63,7 +65,7 @@ class ProjectRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': '',
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'prefer_pool_num'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_prefer_pool_num',
         }))
     prefer_wallet_num = forms.CharField(
@@ -72,7 +74,7 @@ class ProjectRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': '',
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'prefer_wallet_num'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_prefer_wallet_num',
         }))
 
@@ -83,7 +85,7 @@ class ProjectRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'www.example.com or http(s)://example.com',
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'website'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_website',
         }))
 
@@ -94,7 +96,7 @@ class ProjectRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'abc@example.com',
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'email'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_email',
         }))
 
@@ -106,7 +108,7 @@ class ProjectRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'Enter the email again',
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'email2'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_email2',
         }))
 
@@ -116,7 +118,7 @@ class ProjectRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': '',
             'hx-get': reverse_lazy('registration:validate-proj-subject', kwargs={'subject': 'phone'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_phone',
         }))
 
@@ -125,6 +127,7 @@ class ProjectRegistrationForm(forms.ModelForm):
         required=True)
 
     captcha = ReCaptchaField(
+        required=True,
         label="",
         widget=ReCaptchaV2Checkbox,)
 
@@ -231,7 +234,7 @@ class PoolRegistrationForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
             'class': 'form-control ',
             'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'pool_name'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_pool_name',
         }))
 
@@ -240,7 +243,7 @@ class PoolRegistrationForm(forms.ModelForm):
         error_messages={'required': ("Pool ID field is required")},
         widget=forms.TextInput(attrs={
             'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'pool_id'},),
-            'hx-trigger': 'keyup',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_pool_id',
         }))
 
@@ -250,7 +253,7 @@ class PoolRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'AZ, LUNA,...',
             'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'prefered_tokens'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_prefered_tokens',
         }))
 
@@ -261,7 +264,7 @@ class PoolRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'www.example.com or http(s)://example.com',
             'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'website'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_website',
         }))
 
@@ -272,7 +275,7 @@ class PoolRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'abc@example.com',
             'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'email'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_email',
         }))
 
@@ -284,7 +287,7 @@ class PoolRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': 'Enter the email again',
             'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'email2'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_email2',
         }))
 
@@ -294,7 +297,7 @@ class PoolRegistrationForm(forms.ModelForm):
             'class': 'form-control',
             'placeholder': '',
             'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'phone'},),
-            'hx-trigger': 'keyup changed',
+            'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_phone',
         }))
 
@@ -304,6 +307,7 @@ class PoolRegistrationForm(forms.ModelForm):
     )
 
     captcha = ReCaptchaField(
+        required=True,
         label="",
         widget=ReCaptchaV2Checkbox,)
 
@@ -328,7 +332,7 @@ class PoolRegistrationForm(forms.ModelForm):
 
     def clean_pool_id(self):
         pool_id = self.cleaned_data['pool_id']
-        if len(pool_id) > 0:
+        if (pool_id):
             self.fields['pool_id'].widget.attrs.update(
                 {'class': 'form-control is-valid'})
         return pool_id
@@ -364,8 +368,12 @@ class PoolRegistrationForm(forms.ModelForm):
         return phone
 
     def clean(self):
+        if 'captcha' not in self.cleaned_data:
+            self.add_error("captcha", "Captcha is required")
+
         if 'email' in self.cleaned_data and 'email2' in self.cleaned_data:
             if self.cleaned_data['email'] != self.cleaned_data['email2']:
                 self.add_error("email2", "Confirmation email is not the same")
-                raise forms.ValidationError("Confirmation email is not the same")
+            if not PoolHash.objects.using('cardano').filter(view=self.cleaned_data['pool_id']).exists():
+                self.add_error("pool_id", "This Pool ID is not exists")
         return self.cleaned_data
