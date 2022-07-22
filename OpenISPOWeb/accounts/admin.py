@@ -18,14 +18,15 @@ class ProjectUserAdmin(UserAdmin):
     )
     add_fieldsets = (
         (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'user_type', 'status')}
+            'classes': ('wide'),
+            'fields': ('email', ('password1', 'random_password_button'), 'password2', 'user_type', 'status')}
         ),
     )
     search_fields = ('email',)
     ordering = ('email',)
 
+    class Media:
+        js = ("accounts/js/random_password.js", )
 
 admin.site.register(ProjectUser, ProjectUserAdmin)
 admin.site.unregister(Group)
-

@@ -24,6 +24,14 @@ class ProjectUserCreationForm(UserCreationForm):
         widget=forms.RadioSelect(),
         initial="token_distributor")
 
+    random_password_button = forms.CharField(
+        label="",
+        widget=forms.TextInput(attrs={
+            'value': 'Random Password',
+            'type': 'button',
+            'onClick': 'random_password()'
+        }))
+
     class Meta:
         model = ProjectUser
         fields = ("email", "status", "user_type")
