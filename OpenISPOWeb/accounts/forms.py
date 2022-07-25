@@ -3,6 +3,10 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import ProjectUser
 from django import forms
 
+from django.core.mail import EmailMessage  
+from django.template.loader import render_to_string 
+
+
 class ProjectUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
@@ -25,6 +29,7 @@ class ProjectUserCreationForm(UserCreationForm):
         initial="token_distributor")
 
     random_password_button = forms.CharField(
+        required=False,
         label="",
         widget=forms.TextInput(attrs={
             'value': 'Random Password',
@@ -37,7 +42,21 @@ class ProjectUserCreationForm(UserCreationForm):
         fields = ("email", "status", "user_type")
 
     def save(self, commit=True):
-        user = super(ProjectUserCreationForm, self).save(commit=False)
+        user = super().save(commit=False)
+        user_email = self.cleaned_data["email"]
+        user_password = self.cleaned_data["password1"]
+        user.set_password(user_password)
+        
+        # Send activate notify to user email
+        mail_subject = '[OPENISPO] Your acount is activated'  
+        message = render_to_string('accounts/accountcreateemailnotify.html', {  
+            "email": user_email,
+            "password": user_password,
+        })  
+        to_email = user_email 
+        email = EmailMessage(mail_subject, message, to=[to_email])  
+        email.send() 
+
         if commit:
             user.save()
         return user
