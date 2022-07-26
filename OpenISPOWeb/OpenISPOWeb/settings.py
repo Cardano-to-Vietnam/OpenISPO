@@ -149,9 +149,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-# STATICFILES_DIRS = (
-#     os.path.join(SETTINGS_PATH, 'static'),
-# )
+STATICFILES_DIRS = (
+    os.path.join(SETTINGS_PATH, 'static'),
+)
 ASSETS_ROOT = '/static/assets'
 
 # Default primary key field type
