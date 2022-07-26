@@ -74,6 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'context_processors.cfg_assets_root',
             ],
         },
     },
@@ -151,6 +152,7 @@ STATIC_URL = 'static/'
 # STATICFILES_DIRS = (
 #     os.path.join(SETTINGS_PATH, 'static'),
 # )
+ASSETS_ROOT = '/static/assets'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
