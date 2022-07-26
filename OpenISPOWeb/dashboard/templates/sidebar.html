@@ -1,0 +1,69 @@
+<!-- [ navigation menu ] start -->
+<nav class="pcoded-navbar">
+    <div class="navbar-wrapper">
+        <div class="navbar-brand header-logo">
+            <a href="/" class="b-brand">
+                <div class="b-bg">
+                    <i class="feather icon-trending-up"></i>
+                </div>
+                <span class="b-title">Open ISPO</span>
+            </a>
+            <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
+        </div>
+        <div class="navbar-content scroll-div">            
+            <ul class="nav pcoded-inner-navbar">
+                {% if user.is_authenticated %}
+                <li>                    
+                    <a class="nav-link"><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                     class="pcoded-mtext">Welcome {{user.email}}</span></a>
+                    <!-- <a class="nav-link" href="/logout">Logout</a> -->
+                </li>
+                {% else %}        
+                <li>
+                    <a class="nav-link" href="/login">Login</a>
+                </li>    
+                {% endif %}
+
+                {% if user.user_type == "token_distributor" %}
+                <li>
+                    <a href="/project_dashboard" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                       class="pcoded-mtext">Dashboard</span></a>
+                </li>
+                <li>
+                    <a href="/project_contract" class="nav-link">
+                    <span class="pcoded-micon"><i class="feather icon-user"></i></span>
+                    <span class="pcoded-mtext">Contract</span></a>
+                </li>
+                <li>
+                    <a href="/project_notification" class="nav-link ">
+                    <span class="pcoded-micon"><i class="feather icon-file-text"></i></span>
+                    <span class="pcoded-mtext">Notifications</span></a>
+                </li>
+                {% elif user.user_type == "pools_owner" %}
+                <li>
+                    <a href="/pool_dashboard" class="nav-link">
+                    <span class="pcoded-micon"><i class="feather icon-user"></i></span>
+                    <span class="pcoded-mtext">Pool Dashboard</span></a>
+                </li>
+                <li>
+                    <a href="/pool_contract" class="nav-link ">
+                    <span class="pcoded-micon"><i class="feather icon-file-text"></i></span>
+                    <span class="pcoded-mtext">Contract</span></a>
+                </li>
+                <li>
+                    <a href="/pool_notification" class="nav-link">
+                    <span class="pcoded-micon"><i class="feather icon-user"></i></span>
+                    <span class="pcoded-mtext">Notifications</span></a>
+                </li>
+                {% elif user.user_type == "delegator" %}
+                <li>
+                    <a href="/delegator_dashboard" class="nav-link ">
+                    <span class="pcoded-micon"><i class="feather icon-file-text"></i></span>
+                    <span class="pcoded-mtext">Dashboard</span></a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- [ navigation menu ] end -->
