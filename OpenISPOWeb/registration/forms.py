@@ -152,11 +152,11 @@ class ProjectRegistrationForm(forms.ModelForm):
 
     def clean_token_num(self):
         token_num = self.cleaned_data['token_num']
+        if not token_num.isnumeric():
+            raise forms.ValidationError("Please enter a number in this field")
         if len(token_num) > 0:
             self.fields['token_num'].widget.attrs.update(
                 {'class': 'form-control is-valid'})
-        if not token_num.isnumeric():
-            raise forms.ValidationError("Please enter a number in this field")
         return token_num
 
     def clean_start_time(self):
@@ -242,6 +242,7 @@ class PoolRegistrationForm(forms.ModelForm):
         label="Pool ID",
         error_messages={'required': ("Pool ID field is required")},
         widget=forms.TextInput(attrs={
+            'class': 'form-control ',
             'hx-get': reverse_lazy('registration:validate-pool-subject', kwargs={'subject': 'pool_id'},),
             'hx-trigger': 'keyup delay:500ms changed',
             'hx-target': '#div_id_pool_id',
