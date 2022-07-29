@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.http import HttpResponse
-from .forms import ProjectUserCreationForm
+from .forms import ProjectUserCreationForm, UserLoginForm
 
 def login_done(request):
     if not request.user.is_authenticated:
@@ -14,9 +14,9 @@ def login_request(request):
     if request.user.is_authenticated:
         return render(request=request, template_name="accounts/logindone.html")
 
-    form = AuthenticationForm()
+    form = UserLoginForm()
     if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
+        form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
