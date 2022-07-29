@@ -27,8 +27,21 @@
           {{ poolregis_form.phone|as_crispy_field }}
         </div>
       </div>
-      {{ poolregis_form.disclaimer_agreement|as_crispy_field }}
-      {{ poolregis_form.captcha|as_crispy_field }}
+      <object data="http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0f"
+        type="application/pdf" height="300px" width="100%">
+        <embed src="http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0f"
+          type="application/pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a
+            href="http://infolab.stanford.edu/pub/papers/google.pdf">Download
+            PDF</a>.</p>
+        </embed>
+      </object>
+      <div style="display: flex; align-items: center; justify-content: center;">
+        {{ poolregis_form.disclaimer_agreement|as_crispy_field }}
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center;">
+        {{ poolregis_form.captcha|as_crispy_field }}
+      </div>
       <!-- {% if messages %}
       <ul class="messages">
           {% for message in messages %}
@@ -36,7 +49,9 @@
           {% endfor %}
       </ul>
       {% endif %} -->
-      <button type="submit" class="btn btn-primary">Resgister</button>        
+      <div style="display: flex; align-items: center; justify-content: center;">
+        <button type="submit" class="btn btn-primary">Resgister</button>    
+      </div>
     </div>
   </form>
 </div>
