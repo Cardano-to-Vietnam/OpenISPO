@@ -1,64 +1,68 @@
-{% extends "registration/header.html" %}
+{% extends "base/header.html" %}
 
 {% block content %}
 
-{% load crispy_forms_tags %}
-<h1>Token Registration Form</h1>
-<form method="post">
-  {% csrf_token %}
-  <div class="row">
-    <div class="col-md-8">
-      {{ projectregis_form.token_name|as_crispy_field }}
+<div class="position-relative border-radius-xl overflow-hidden shadow-lg mb-7">
+  {% load crispy_forms_tags %}
+  <form method="post">
+    {% csrf_token %}
+    <div class="card-body">
+      <h1 class="text-center">Token Registration Form</h1>
+      <div class="row">
+        <div class="col-md-8">
+          {{ projectregis_form.token_name|as_crispy_field }}
+        </div>
+        <div class="col-md-4">
+          {{ projectregis_form.token_num|as_crispy_field }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          {{ projectregis_form.start_time|as_crispy_field }}
+        </div>
+        <div class="col-md-6">
+          {{ projectregis_form.end_time|as_crispy_field }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          {{ projectregis_form.prefer_pool_num|as_crispy_field }}
+        </div>
+        <div class="col-md-6">
+          {{ projectregis_form.prefer_wallet_num|as_crispy_field }}
+        </div>
+      </div>
+      {{ projectregis_form.email|as_crispy_field }}
+      {{ projectregis_form.email2|as_crispy_field }}
+      <div class="row">
+        <div class="col-md-9">
+          {{ projectregis_form.website|as_crispy_field }}
+        </div>
+        <div class="col-md-3">
+          {{ projectregis_form.phone|as_crispy_field }}
+        </div>
+      </div>
+      <!-- data="https://drive.google.com/viewerng/viewer?embedded=true&url=http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0" -->
+      <!-- src="https://drive.google.com/viewerng/viewer?embedded=true&url=http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0f" -->
+      <object data="http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0f"
+        type="application/pdf" height="300px" width="100%">
+        <embed src="http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0f"
+          type="application/pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a
+            href="http://infolab.stanford.edu/pub/papers/google.pdf">Download
+            PDF</a>.</p>
+        </embed>
+      </object>
+      <div style="display: flex; align-items: center; justify-content: center;">
+        {{ projectregis_form.disclaimer_agreement|as_crispy_field }}
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center;">
+        {{ projectregis_form.captcha|as_crispy_field }}
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center;">
+        <button type="submit" class="btn btn-primary">Resgister</button>
+      </div>
     </div>
-    <div class="col-md-4">
-      {{ projectregis_form.token_num|as_crispy_field }}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      {{ projectregis_form.start_time|as_crispy_field }}
-    </div>
-    <div class="col-md-6">
-      {{ projectregis_form.end_time|as_crispy_field }}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      {{ projectregis_form.prefer_pool_num|as_crispy_field }}
-    </div>
-    <div class="col-md-6">
-      {{ projectregis_form.prefer_wallet_num|as_crispy_field }}
-    </div>
-  </div>
-  {{ projectregis_form.email|as_crispy_field }}
-  {{ projectregis_form.email2|as_crispy_field }}
-  <div class="row">
-    <div class="col-md-9">
-      {{ projectregis_form.website|as_crispy_field }}
-    </div>
-    <div class="col-md-3">
-      {{ projectregis_form.phone|as_crispy_field }}
-    </div>
-  </div>
-  <!-- data="https://drive.google.com/viewerng/viewer?embedded=true&url=http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0" -->
-  <!-- src="https://drive.google.com/viewerng/viewer?embedded=true&url=http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0f" -->
-  <object data="http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0f"
-    type="application/pdf" height="300px" width="100%">
-    <embed src="http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0f"
-      type="application/pdf">
-    <p>This browser does not support PDFs. Please download the PDF to view it: <a
-        href="http://infolab.stanford.edu/pub/papers/google.pdf">Download
-        PDF</a>.</p>
-    </embed>
-  </object>
-  <div style="display: flex; align-items: center; justify-content: center;">
-    {{ projectregis_form.disclaimer_agreement|as_crispy_field }}
-  </div>
-  <div style="display: flex; align-items: center; justify-content: center;">
-    {{ projectregis_form.captcha|as_crispy_field }}
-  </div>
-  <div style="display: flex; align-items: center; justify-content: center;">
-    <button type="submit" class="btn btn-primary">Resgister</button>
-  </div>
-</form>
+  </form>
+</div>
 {% endblock %}

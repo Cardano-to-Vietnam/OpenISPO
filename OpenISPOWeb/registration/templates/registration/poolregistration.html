@@ -1,41 +1,43 @@
-{% extends "registration/header.html" %}
+{% extends "base/header.html" %}
 
 {% block content %} 
 
-{% load crispy_forms_tags %}     
-<h1>Pool Registration Form</h1>
-
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-
+<div class="position-relative border-radius-xl overflow-hidden shadow-lg mb-7">
+  {% load crispy_forms_tags %}     
   <form method="post">
     {% csrf_token %}
-    <div class="row">
-      <div class="col-md-6">
-        {{ poolregis_form.pool_name|as_crispy_field }}
+    <div class="card-body">
+      <h1 class="text-center">Pool Registration Form</h1>
+      <div class="row">
+        <div class="col-md-6">
+          {{ poolregis_form.pool_name|as_crispy_field }}
+        </div>
+        <div class="col-md-6">
+          {{ poolregis_form.pool_id|as_crispy_field }}
+        </div>
       </div>
-      <div class="col-md-6">
-        {{ poolregis_form.pool_id|as_crispy_field }}
+      {{ poolregis_form.prefered_tokens|as_crispy_field }}
+      {{ poolregis_form.email|as_crispy_field }}
+      {{ poolregis_form.email2|as_crispy_field }}
+      <div class="row">
+        <div class="col-md-9">
+          {{ poolregis_form.website|as_crispy_field }}
+        </div>
+        <div class="col-md-3">
+          {{ poolregis_form.phone|as_crispy_field }}
+        </div>
       </div>
+      {{ poolregis_form.disclaimer_agreement|as_crispy_field }}
+      {{ poolregis_form.captcha|as_crispy_field }}
+      <!-- {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %} -->
+      <button type="submit" class="btn btn-primary">Resgister</button>        
     </div>
-    {{ poolregis_form.prefered_tokens|as_crispy_field }}
-    {{ poolregis_form.email|as_crispy_field }}
-    {{ poolregis_form.email2|as_crispy_field }}
-    <div class="row">
-      <div class="col-md-9">
-        {{ poolregis_form.website|as_crispy_field }}
-      </div>
-      <div class="col-md-3">
-        {{ poolregis_form.phone|as_crispy_field }}
-      </div>
-    </div>
-    {{ poolregis_form.disclaimer_agreement|as_crispy_field }}
-    {{ poolregis_form.captcha|as_crispy_field }}
-    <button type="submit" class="btn btn-primary">Resgister</button>
   </form>
+</div>
 {% endblock %}  
